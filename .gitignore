@@ -24,8 +24,9 @@ hs_err_pid*
 replay_pid*
 
 #自定义忽略的文件在这里
-main/resources/application.properties
-main/resources/static/
+src/main/resources/application.properties
+src/main/resources/static/
+*.sql
 
 HELP.md
 target/

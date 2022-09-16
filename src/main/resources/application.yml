@@ -1,0 +1,22 @@
+server:
+  port: 80
+spring:
+  application:
+    name: delivery_platform
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://127.0.0.1:3306/ssm_db?serverTimezone=Asia/Shanghai&characterEncoding=utf8
+      username: linghdl
+      password: jgidlem!$
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: false
+  global-config:
+    db-config:
+      id-type: assign_id
+logging:
+  level:
+    root: debug
