@@ -5,8 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @SpringBootTest
 class EmployeeServiceImplTest {
 
@@ -19,6 +17,6 @@ class EmployeeServiceImplTest {
 
     @Test
     void verifyUsernamePassword() {
-        employeeService.verifyUsernamePassword("admin", "e10adc3949ba59abbe56e057f20f883e");
+//        employeeService.verifyUsernamePassword("admin", "e10adc3949ba59abbe56e057f20f883e");
     }
 }
