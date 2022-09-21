@@ -1,6 +1,8 @@
 package com.bing.interceptor;
 
 
+import com.alibaba.fastjson2.JSON;
+import com.bing.common.R;
 import com.bing.util.MatchUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -22,33 +24,26 @@ import javax.servlet.http.HttpServletResponse;
 public class LoginStatusInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+//拦截器：拦截规则在 配置类中 registry.addInterceptor() 方法设置，
+// 所以 只要是进入此方法的，一定是符合拦截规则的请求
 
 //        1.获取本次请求的URI
         String path = request.getServletPath();
-        log.info("MVC 拦截器 拦截的 path： {}", path);
-
-        String[] ignoreUrls = new String[]{"/employee/login",  // 使用拦截器时，此列表作废，在 MVC 核心配置中设置
-                "/employee/logout",
-                "/backend/**",
-                "/front/**"};
-
-        //        4.判断登录状态，session中已经登录，放行
-        if (request.getSession().getAttribute("employeeId_session") != null) {
-            return true;
-        }
-//
-//        3.未登录，但是无需处理，放行
-        if (MatchUtil.check(path, ignoreUrls)) {
-//      访问的是忽略列表的地址，不拦截
+        // 2.判断登录状态，session中已经登录，放行
+        if (null != request.getSession().getAttribute("employeeId_session")) {
+            log.info("MVC 拦截器 拦截了 path： {}； === 结果 ===:    放行", path);
             return true;
         }
 
-//        5.未登录，且访问的是需要权限的页面，重定向到登录页面
-        System.out.println(request.getRemoteHost() +"       根路径");
-        response.sendRedirect(request.getContextPath() + "backend/page/login/login.html");
+//        3.未登录，且访问的是需要权限的页面，重定向到登录页面
+        log.info("MVC 拦截器 拦截了 path： {}； === 结果 ===:    拦截，响应通知前端重定向", path);
+        response.setCharacterEncoding("UTF-8"); //设置 HttpServletResponse使用utf-8编码
+        response.setHeader("Content-Type", "application/json;charset=utf-8");  //设置响应头的编码
+        response.getWriter().write(JSON.toJSONString(R.fail(400, "未登录，无操作权限！")));
+
+//        response.sendRedirect( "../backend/page/login/login.html"); 作废
         return false;
     }
-
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
