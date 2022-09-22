@@ -1,7 +1,10 @@
 package com.bing.controller;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bing.common.R;
 import com.bing.controller.VO.EmployeeVO;
+import com.bing.entity.EmployeeDO;
 import com.bing.service.DTO.EmployeeDTO;
 import com.bing.service.EmployeeService;
 import com.bing.util.MyBeanUtil;
@@ -11,8 +14,6 @@ import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Collections;
-import java.util.Enumeration;
 
 /**
  * @author: LiBingYan
@@ -29,6 +30,8 @@ public class EmployeeController {
     /**
      * -------------------------------------------------
      * 员工登录接口
+     *
+     * @return
      * @params:
      * @author: LiBingYan
      * @时间: 2022/9/19
@@ -36,6 +39,10 @@ public class EmployeeController {
     @PostMapping("/login")
     public R<EmployeeVO> employeeLogin(HttpServletRequest request, @RequestBody EmployeeDTO employeeDTO) {
 
+        // 已经登录，通知前端直接跳转，不再查询 DB
+        if (request.getSession().getAttribute("employeeId_session") != null) {
+            return R.fail(201, "已经登录，前端直接跳转页面");
+        }
         //1、将页面提交的密码password进行md5加密处理;一般将MD5放在前端
         String password = employeeDTO.getPassword();
         password = DigestUtils.md5DigestAsHex(password.getBytes());
@@ -58,7 +65,6 @@ public class EmployeeController {
             log.error("  密码正确，账户被禁用  ");
             return R.fail(406, "账号已禁用，登录失败");
         }
-
 
         //6.将 结果转换成VO响应给前端
         EmployeeVO employeeVO = new EmployeeVO();
@@ -100,15 +106,41 @@ public class EmployeeController {
      * -------------------------------------------------
      * 所有员工列表，分页查询
      *
+     * @return
      * @params: 第几页，每页几行，查询的员工名
      * @author: LiBingYan
      * @时间: 2022/9/19
      */
-    @GetMapping("/page")
-    public R<EmployeeVO> page(HttpServletRequest httpServletRequest, int page, int pageSize, String name) {
-        log.info("page = {},pageSize = {},name = {}", page, pageSize, name);
+    @GetMapping("/page") //  参数名不匹配异常类型： IllegalStateException
+    public R<IPage> page(HttpServletRequest httpServletRequest,
+                         @RequestParam(value = "page") Integer currentPage, Integer pageSize, String name) {
+        // 调用 service 查询一页
+        log.info("page = {},pageSize = {},name = {}", currentPage, pageSize, name);
+        Page<EmployeeDO> onePage = employeeService.getByPageByName(currentPage, pageSize, name);
 
-        return null;
+        // 调用工具类，将 page_DO 转换成 page_VO 以展示给前端 ，转换是直接在调用的对象 onePage 上操作的。
+        onePage.convert(resultOne -> {
+            //resultOne 是原page 中的一条记录，VO 为转换类型后的一条记录
+            EmployeeVO vo = new EmployeeVO();
+            MyBeanUtil.copyProperties(resultOne, vo);
+            return vo;
+        });
+
+        log.info(onePage.getRecords().toString());
+
+        return R.success(onePage);
     }
+
+    // 查询-员工详细信息
+    @GetMapping(value = "/{employeeID}")
+    public R<EmployeeVO> getOneDetil(@PathVariable Long employeeID) {
+        EmployeeDO employeeDO = employeeService.getById(employeeID);
+        EmployeeVO employeeVO = new EmployeeVO();
+        MyBeanUtil.copyProperties(employeeDO, employeeVO, null);
+        return R.success(employeeVO);
+    }
+    //修改-账号禁用状态  //删除-员工
+    // 修改-员工详细信息
+    // 新增-员工
 
 }

@@ -2,6 +2,8 @@ package com.bing.service.DTO;
 
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
 //复制于 DO
 public class EmployeeDTO {
@@ -14,3 +16,4 @@ public class EmployeeDTO {
     private String id_number; // '身份证号',
     private int status; //   '状态 0:禁用，1:正常',
 }
+

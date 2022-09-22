@@ -1,5 +1,6 @@
 package com.bing.util;
 
+import com.bing.controller.VO.EmployeeVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
@@ -9,15 +10,17 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.util.*;
 
-/**-------------------------------------------------
- * @功能: 自定义封装的实体拷贝工具，用于各种VO、DTO等之间的复制转换。
+/**
+ * -------------------------------------------------
  *
+ * @功能: 自定义封装的实体拷贝工具，用于各种VO、DTO等之间的复制转换。
+ * <p>
  * Spring提供的 BeanUtils 进行数据拷贝，但它有两个问题：
  * ● 没有提供额外的映射关系，所以两个实体类字段名必须完全一致
  * ● 不支持深拷贝，所以只用BeanUtils复制基本型的属性而非容器。
- * @作者:  LiBingYan
- * @时间:  2022/9/17
- *--------------------------------------------------
+ * @作者: LiBingYan
+ * @时间: 2022/9/17
+ * --------------------------------------------------
  */
 public abstract class MyBeanUtil {
 
@@ -38,6 +41,7 @@ public abstract class MyBeanUtil {
         return copyList(sources, clazz, null);
     }
 
+//    clazz 参数代表： 列表中存储的类型，针对只有一层列表的情况进行深拷贝
     public static <T> List<T> copyList(List sources, Class<T> clazz, Callback<T> callback) {
         List<T> targetList = new ArrayList<>();
         if (sources != null) {
