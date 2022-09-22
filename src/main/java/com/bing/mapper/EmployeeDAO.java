@@ -6,4 +6,8 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface EmployeeDAO extends BaseMapper<EmployeeDO> {
+    public EmployeeDO selectOneUseXML(String name);
+
+    public int updateStatus(Long employeeId,Integer status);
+
 }
