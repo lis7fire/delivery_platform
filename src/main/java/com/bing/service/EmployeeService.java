@@ -11,10 +11,15 @@ import com.bing.entity.EmployeeDO;
 import com.bing.mapper.EmployeeDAO;
 import com.bing.util.MyBeanUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.security.MD5Encoder;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
 
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -27,15 +32,42 @@ public class EmployeeService {
 
     }
 
-    public boolean save(EmployeeDO newEmployee) {
-        return false;
+    public boolean save(EmployeeDTO newEmployee) {
+        EmployeeDO employeeDO = dto2DO(newEmployee);
+        employeeDO.setCreate_time(LocalDateTime.now());
+        // 设置 默认初始密码 == 用户名相同
+        employeeDO.setPassword(DigestUtils.md5DigestAsHex(employeeDO.getUsername().getBytes()));
+
+//        log.info(String.valueOf(employeeDAO.insert(employeeDO)));
+
+        return employeeDAO.insert(employeeDO) > 0 ? true : false;
+    }
+
+    @NotNull
+    private EmployeeDO dto2DO(EmployeeDTO newEmployee) {
+        EmployeeDO employeeDO = new EmployeeDO();
+        MyBeanUtil.copyProperties(newEmployee, employeeDO);
+        employeeDO.setUpdate_time(LocalDateTime.now());
+
+        return employeeDO;
     }
 
     public boolean deleteById(Long bookId) {
         return false;
     }
 
-    public boolean update(EmployeeDO newEmployee) {
+    public boolean update(EmployeeDTO newEmployee) {
+
+        EmployeeDO employeeDO = dto2DO(newEmployee);
+
+//        log.info(String.valueOf(employeeDAO.updateById(employeeDO)));
+
+        return employeeDAO.updateById(employeeDO) > 0 ? true : false;
+    }
+
+    public boolean updateStatus(Long employeeId, int status) {
+
+        log.info(String.valueOf(employeeDAO.updateStatus(employeeId, status)));
         return false;
     }
 
@@ -79,8 +111,10 @@ public class EmployeeService {
     public Page<EmployeeDO> getByPageByName(Integer currenPage, Integer psize, String name) {
         // 构造查询条件： name 有值，就按name查，否则 查询全部，
         LambdaQueryWrapper<EmployeeDO> queryWrapper = new LambdaQueryWrapper<>();
-
-        queryWrapper.likeRight(StringUtils.hasLength(name), EmployeeDO::getName, name);
+        if (name != null) {
+            name = name.trim(); // StringUtils.hasLength(name);
+            queryWrapper.likeRight(!name.isEmpty(), EmployeeDO::getName, name);
+        }
         // 以 更新时间 降序
         queryWrapper.orderByDesc(EmployeeDO::getUpdate_time);
         // 采用 MP的分页查询， MP的分页查询效率低，最好自己优化实现，不用MP的此插件
@@ -89,5 +123,6 @@ public class EmployeeService {
 
         return onePage;
     }
+
 
 }

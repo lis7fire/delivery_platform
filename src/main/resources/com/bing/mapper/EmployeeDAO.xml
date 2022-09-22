@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bing.mapper.EmployeeDAO">
+
+    <update id="updateStatus">
+        update employee
+        set status = #{status}
+        where id = #{employeeId}
+    </update>
+
+    <select id="selectOneUseXML" resultType="com.bing.entity.EmployeeDO">
+        select *
+        from employee
+        where name = #{name};
+    </select>
+
+</mapper>

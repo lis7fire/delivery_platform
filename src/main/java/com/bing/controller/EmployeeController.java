@@ -14,6 +14,7 @@ import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 /**
  * @author: LiBingYan
@@ -98,7 +99,8 @@ public class EmployeeController {
     }
 
     @GetMapping("/session")
-    public R<String> getSession(HttpServletRequest httpServletRequest) {
+    public R<String> getSession(HttpServletRequest httpServletRequest, @RequestBody Map<String, Object> test) {
+        log.error("通过map接收的请求体：{ } 其中的values：{ }", test, test.values());
         return R.success("当前连接 的 employeeId_session 值为 ：" + httpServletRequest.getSession().getAttribute("employeeId_session"));
     }
 
@@ -115,7 +117,7 @@ public class EmployeeController {
     public R<IPage> page(HttpServletRequest httpServletRequest,
                          @RequestParam(value = "page") Integer currentPage, Integer pageSize, String name) {
         // 调用 service 查询一页
-        log.info("page = {},pageSize = {},name = {}", currentPage, pageSize, name);
+        log.info("所有员工分页查询，page = {},pageSize = {},name = {}", currentPage, pageSize, name);
         Page<EmployeeDO> onePage = employeeService.getByPageByName(currentPage, pageSize, name);
 
         // 调用工具类，将 page_DO 转换成 page_VO 以展示给前端 ，转换是直接在调用的对象 onePage 上操作的。
@@ -134,13 +136,52 @@ public class EmployeeController {
     // 查询-员工详细信息
     @GetMapping(value = "/{employeeID}")
     public R<EmployeeVO> getOneDetil(@PathVariable Long employeeID) {
+        log.info("查询-单个员工详细信息,传入ID:{}", employeeID);
         EmployeeDO employeeDO = employeeService.getById(employeeID);
+        if (employeeDO == null) {
+            return R.fail(404, "没有查询到对应员工信息");
+        }
         EmployeeVO employeeVO = new EmployeeVO();
-        MyBeanUtil.copyProperties(employeeDO, employeeVO, null);
+        MyBeanUtil.copyProperties(employeeDO, employeeVO);
         return R.success(employeeVO);
     }
-    //修改-账号禁用状态  //删除-员工
-    // 修改-员工详细信息
+
+
     // 新增-员工
+    @PostMapping
+    public R<String> addEmployee(HttpServletRequest request, @RequestBody EmployeeVO newEmployeeVO) {
+        log.info("新增员工,传入信息:{}", newEmployeeVO);
+
+        EmployeeDTO employeeDTO = vo2DTO(request, newEmployeeVO);
+        employeeDTO.setCreate_user(employeeDTO.getUpdate_user());
+
+        boolean result = employeeService.save(employeeDTO);
+
+        return result ? R.success("新增员工成功！") : R.fail(405, "添加失败，一般不会运行到这里，因为失败了一定会有异常");
+    }
+
+    // 修改-员工详细信息  //修改-账号禁用状态  //删除-员工
+    @PutMapping
+    public R<String> editEmployee(HttpServletRequest request, @RequestBody EmployeeVO newEmployeeVO) {
+        log.info("修改员工资料,传入信息:{}", newEmployeeVO);
+
+        EmployeeDTO employeeDTO = vo2DTO(request, newEmployeeVO);
+
+        employeeService.update(employeeDTO);
+        return R.success("员工信息修改成功！");
+    }
+
+    //  VO 转为 DTO ,并 向 DTO 加入 更新操作人 ID
+    private EmployeeDTO vo2DTO(HttpServletRequest request, EmployeeVO newEmployeeVO) {
+
+        EmployeeDTO employeeDTO = new EmployeeDTO();
+        MyBeanUtil.copyProperties(newEmployeeVO, employeeDTO);
+
+        // 获取当前登录用户的 ID 设置其为操作人
+        Long loginEmployeeId = (Long) request.getSession().getAttribute("employeeId_session");
+        employeeDTO.setUpdate_user(loginEmployeeId);
+
+        return employeeDTO;
+    }
 
 }

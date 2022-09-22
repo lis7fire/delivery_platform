@@ -10,14 +10,20 @@ spring:
       url: jdbc:mysql://127.0.0.1:3306/ssm_db?serverTimezone=Asia/Shanghai&characterEncoding=utf8
       username: linghdl
       password: jgidlem!$
+      connect-timeout: 6000
+      initial-size: 3   # 一直保持的连接数量,默认为 0，需要设置，否则容易前端超时
+      min-idle: 5  # 一直保持的连接数量
 mybatis-plus:
   type-aliases-package: com.bing.entity
+  #  默认扫描启动类目录为根目录
+  mapper-locations: classpath:/mapper/*.xml
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     map-underscore-to-camel-case: true
   global-config:
     db-config:
       id-type: assign_id
+
 logging:
   level:
     root: info
