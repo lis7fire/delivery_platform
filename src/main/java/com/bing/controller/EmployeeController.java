@@ -69,7 +69,7 @@ public class EmployeeController {
 
         //6.将 结果转换成VO响应给前端
         EmployeeVO employeeVO = new EmployeeVO();
-        MyBeanUtil.copyProperties(loginResult, employeeVO, "password", "status");
+        MyBeanUtil.copyProperties(loginResult, employeeVO, "password");
 
 //        Enumeration<String> a = request.getSession().getAttributeNames();
 //        log.info(String.valueOf(a instanceof Collections));
@@ -121,6 +121,7 @@ public class EmployeeController {
         Page<EmployeeDO> onePage = employeeService.getByPageByName(currentPage, pageSize, name);
 
         // 调用工具类，将 page_DO 转换成 page_VO 以展示给前端 ，转换是直接在调用的对象 onePage 上操作的。
+        log.info(onePage.getRecords().toString());
         onePage.convert(resultOne -> {
             //resultOne 是原page 中的一条记录，VO 为转换类型后的一条记录
             EmployeeVO vo = new EmployeeVO();
@@ -168,6 +169,7 @@ public class EmployeeController {
         EmployeeDTO employeeDTO = vo2DTO(request, newEmployeeVO);
 
         employeeService.update(employeeDTO);
+        log.info("修改后的：{}",employeeDTO);
         return R.success("员工信息修改成功！");
     }
 

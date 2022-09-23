@@ -88,9 +88,8 @@ public class EmployeeService {
         if (oneEmployee == null) {
             return null;
         }
-
         EmployeeDTO employeeDTOout = new EmployeeDTO();
-        MyBeanUtil.copyProperties(oneEmployee, employeeDTOout, null);
+        MyBeanUtil.copyProperties(oneEmployee, employeeDTOout);
         return employeeDTOout;
     }
 

@@ -21,6 +21,7 @@ public class EmployeeDO {
     private String password; // '密码',
     private String phone; // '手机号',
     private String sex; // '性别',
+    @TableField(value = "id_number")
     private String idNumber; // '身份证号',
     private int status; //   '状态 0:禁用，1:正常',
     private LocalDateTime create_time; //     '创建时间',
