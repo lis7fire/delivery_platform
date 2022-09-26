@@ -11,6 +11,7 @@ import com.bing.util.MyBeanUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.DigestUtils;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -115,7 +116,8 @@ public class EmployeeController {
      */
     @GetMapping("/page") //  参数名不匹配异常类型： IllegalStateException
     public R<IPage> page(HttpServletRequest httpServletRequest,
-                         @RequestParam(value = "page") Integer currentPage, Integer pageSize, String name) {
+                         @RequestParam(value = "page") Integer currentPage,
+                         Integer pageSize, String name) {
         // 调用 service 查询一页
         log.info("所有员工分页查询，page = {},pageSize = {},name = {}", currentPage, pageSize, name);
         Page<EmployeeDO> onePage = employeeService.getByPageByName(currentPage, pageSize, name);
@@ -169,7 +171,7 @@ public class EmployeeController {
         EmployeeDTO employeeDTO = vo2DTO(request, newEmployeeVO);
 
         employeeService.update(employeeDTO);
-        log.info("修改后的：{}",employeeDTO);
+        log.info("修改后的：{}", employeeDTO);
         return R.success("员工信息修改成功！");
     }
 
