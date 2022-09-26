@@ -38,12 +38,21 @@ public class R<T> {
         r.setData(data);
         return r;
     }
-// 静态方法添加泛型：  static ＜T＞
+
+    // 静态方法添加泛型：  static ＜T＞
     public static <T> R<T> fail(Integer code, String msg) {
         R<T> r = new R<T>();
 
         r.setCode(code);
         r.setMsg(msg);
+        return r;
+    }
+
+    public static <T> R<T> fail(ExceptionCodeEnum codeEnum) {
+        R<T> r = new R<T>();
+
+        r.setCode(codeEnum.getCode());
+        r.setMsg(codeEnum.getMessage());
         return r;
     }
 
