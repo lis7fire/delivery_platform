@@ -82,6 +82,10 @@ public class EmployeeController {
         request.getSession().setAttribute("employeeId_session", loginResult.getEmployeeID());
         log.info(" 登录成功，已经写入 session ：{} ", request.getSession().getAttribute("employeeId_session"));
 
+//客户端每次发送的请求都对应一个线程。
+        Long threadId = Thread.currentThread().getId();
+        log.info("对应线程id：{}", threadId);
+
         return R.success(employeeVO);
     }
 

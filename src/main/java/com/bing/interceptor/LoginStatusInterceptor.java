@@ -32,6 +32,12 @@ public class LoginStatusInterceptor implements HandlerInterceptor {
         // 2.判断登录状态，session中已经登录，放行
         if (null != request.getSession().getAttribute("employeeId_session")) {
             log.info("MVC 拦截器 拦截了 path： {}； === 结果 ===:    放行", path);
+
+            //客户端每次发送的请求都对应一个线程。
+            Long threadId = Thread.currentThread().getId();
+            log.info("对应线程id：{}", threadId);
+            ThreadLocal<String> stringThreadLocal = new ThreadLocal<>();
+
             return true;
         }
 

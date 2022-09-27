@@ -37,7 +37,7 @@ public enum ExceptionCodeEnum {
 
     NO_PERMISSION_ERROR(10301, "访问未授权无操作权限！"),
 
-    DB_ERROR(30300, "数据服务出错，请稍后重试！");
+    DB_ERROR(30300, "数据服务出错，请检查输入后重试！");
 
     /**
      * DATA_NOT_EXIST("未查询到记录！"),
