@@ -24,12 +24,15 @@ public class EmployeeDO {
     @TableField(value = "id_number")
     private String idNumber; // '身份证号',
     private int status; //   '状态 0:禁用，1:正常',
+
+    @TableField(fill = FieldFill.INSERT)
     private LocalDateTime create_time; //     '创建时间',
+    @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime update_time; //     '更新时间',
 
-//    @TableField(fill = FieldFill.INSERT)
+    @TableField(fill = FieldFill.INSERT)
     private Long create_user; //   '创建人',
-
+    @TableField(fill = FieldFill.INSERT_UPDATE)
     private Long update_user; //   '修改人',
 
 }

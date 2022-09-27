@@ -28,26 +28,25 @@ public class EmployeeService {
     @Autowired
     private EmployeeDAO employeeDAO;
 
-    public void save() {
-
-    }
 
     public boolean save(EmployeeDTO newEmployee) {
+        log.info("a: ");
         EmployeeDO employeeDO = dto2DO(newEmployee);
         employeeDO.setCreate_time(LocalDateTime.now());
         // 设置 默认初始密码 == 用户名相同
         employeeDO.setPassword(DigestUtils.md5DigestAsHex(employeeDO.getUsername().getBytes()));
 
-//        log.info(String.valueOf(employeeDAO.insert(employeeDO)));
-
-        return employeeDAO.insert(employeeDO) > 0 ? true : false;
+        log.info("b: ");
+        int aa = employeeDAO.insert(employeeDO);
+        log.info("c: ");
+        return aa > 0 ? true : false;
     }
 
     @NotNull
     private EmployeeDO dto2DO(EmployeeDTO newEmployee) {
         EmployeeDO employeeDO = new EmployeeDO();
         MyBeanUtil.copyProperties(newEmployee, employeeDO);
-        employeeDO.setUpdate_time(LocalDateTime.now());
+//        employeeDO.setUpdate_time(LocalDateTime.now());
 
         return employeeDO;
     }
@@ -57,22 +56,17 @@ public class EmployeeService {
     }
 
     public boolean update(EmployeeDTO newEmployee) {
-
         EmployeeDO employeeDO = dto2DO(newEmployee);
-
 //        log.info(String.valueOf(employeeDAO.updateById(employeeDO)));
-
         return employeeDAO.updateById(employeeDO) > 0 ? true : false;
     }
 
     public boolean updateStatus(Long employeeId, int status) {
-
         log.info(String.valueOf(employeeDAO.updateStatus(employeeId, status)));
         return false;
     }
 
     public EmployeeDO getById(Long employeeId) {
-
         return employeeDAO.selectById(employeeId);
     }
 
@@ -91,11 +85,6 @@ public class EmployeeService {
         EmployeeDTO employeeDTOout = new EmployeeDTO();
         MyBeanUtil.copyProperties(oneEmployee, employeeDTOout);
         return employeeDTOout;
-    }
-
-
-    public List<EmployeeDO> getAll() {
-        return null;
     }
 
     /**
