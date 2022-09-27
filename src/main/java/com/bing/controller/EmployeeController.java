@@ -3,15 +3,14 @@ package com.bing.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bing.common.R;
-import com.bing.controller.VO.EmployeeVO;
+import com.bing.entity.VO.EmployeeVO;
 import com.bing.entity.EmployeeDO;
-import com.bing.service.DTO.EmployeeDTO;
+import com.bing.entity.DTO.EmployeeDTO;
 import com.bing.service.EmployeeService;
 import com.bing.util.MyBeanUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.DigestUtils;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -127,7 +126,7 @@ public class EmployeeController {
         Page<EmployeeDO> onePage = employeeService.getByPageByName(currentPage, pageSize, name);
 
         // 调用工具类，将 page_DO 转换成 page_VO 以展示给前端 ，转换是直接在调用的对象 onePage 上操作的。
-        log.info(onePage.getRecords().toString());
+//        log.info(onePage.getRecords().toString());// 转换前，Page中保存的是DO
         onePage.convert(resultOne -> {
             //resultOne 是原page 中的一条记录，VO 为转换类型后的一条记录
             EmployeeVO vo = new EmployeeVO();
@@ -135,7 +134,7 @@ public class EmployeeController {
             return vo;
         });
 
-        log.info(onePage.getRecords().toString());
+        log.info(onePage.getRecords().toString()); // 转换后，Page中保存的是VO
 
         return R.success(onePage);
     }

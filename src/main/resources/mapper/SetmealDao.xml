@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bing.mapper.SetmealDao">
+
+    <resultMap type="com.bing.entity.SetmealDO" id="SetmealMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="categoryId" column="category_id" jdbcType="INTEGER"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="price" column="price" jdbcType="NUMERIC"/>
+        <result property="status" column="status" jdbcType="INTEGER"/>
+        <result property="code" column="code" jdbcType="VARCHAR"/>
+        <result property="description" column="description" jdbcType="VARCHAR"/>
+        <result property="image" column="image" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="createUser" column="create_user" jdbcType="INTEGER"/>
+        <result property="updateUser" column="update_user" jdbcType="INTEGER"/>
+        <result property="isDeleted" column="is_deleted" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!-- 批量插入 -->
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into nutrition_meal.setmeal(category_id, name, price, status, code, description, image, create_time,
+        update_time, create_user, update_user, is_deleted)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.categoryId}, #{entity.name}, #{entity.price}, #{entity.status}, #{entity.code},
+            #{entity.description}, #{entity.image}, #{entity.createTime}, #{entity.updateTime}, #{entity.createUser},
+            #{entity.updateUser}, #{entity.isDeleted})
+        </foreach>
+    </insert>
+    <!-- 批量插入或按主键更新 -->
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into nutrition_meal.setmeal(category_id, name, price, status, code, description, image, create_time,
+        update_time, create_user, update_user, is_deleted)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.categoryId}, #{entity.name}, #{entity.price}, #{entity.status}, #{entity.code},
+            #{entity.description}, #{entity.image}, #{entity.createTime}, #{entity.updateTime}, #{entity.createUser},
+            #{entity.updateUser}, #{entity.isDeleted})
+        </foreach>
+        on duplicate key update
+        category_id = values(category_id) , name = values(name) , price = values(price) , status = values(status) , code
+        = values(code) , description = values(description) , image = values(image) , create_time = values(create_time) ,
+        update_time = values(update_time) , create_user = values(create_user) , update_user = values(update_user) ,
+        is_deleted = values(is_deleted)
+    </insert>
+
+</mapper>
+

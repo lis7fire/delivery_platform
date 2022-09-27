@@ -1,8 +1,6 @@
-package com.bing.service.DTO;
+package com.bing.entity.DTO;
 
 import lombok.Data;
-
-import java.time.LocalDateTime;
 
 @Data
 //复制于 DO

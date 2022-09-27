@@ -1,19 +1,8 @@
-package com.bing.controller.VO;
+package com.bing.entity.VO;
 
-import com.alibaba.druid.sql.visitor.functions.ToDate;
-import com.bing.common.LocalDateTimeToStringConverter;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
-import com.fasterxml.jackson.databind.util.StdConverter;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import lombok.Data;
-import org.jetbrains.annotations.NotNull;
-import org.springframework.validation.annotation.Validated;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
 
 @Data
 /**

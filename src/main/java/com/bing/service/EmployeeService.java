@@ -1,26 +1,18 @@
 package com.bing.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.plugins.pagination.PageDTO;
-import com.bing.common.R;
-import com.bing.controller.VO.EmployeeVO;
-import com.bing.service.DTO.EmployeeDTO;
+import com.bing.entity.DTO.EmployeeDTO;
 import com.bing.entity.EmployeeDO;
 import com.bing.mapper.EmployeeDAO;
 import com.bing.util.MyBeanUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.util.security.MD5Encoder;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
-import org.springframework.util.StringUtils;
 
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Slf4j
 @Service

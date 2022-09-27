@@ -1,10 +1,8 @@
 package com.bing.service;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.bing.service.DTO.EmployeeDTO;
+import com.bing.entity.DTO.EmployeeDTO;
 import com.bing.entity.EmployeeDO;
-import com.bing.util.MyBeanUtil;
 
 import java.util.List;
 
