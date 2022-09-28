@@ -3,11 +3,8 @@ package com.bing.common;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.converter.HttpMessageConversionException;
-import org.springframework.jdbc.support.SQLStateSQLExceptionTranslator;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.method.annotation.ExceptionHandlerMethodResolver;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.sql.SQLException;

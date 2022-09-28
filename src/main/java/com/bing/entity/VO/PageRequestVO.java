@@ -1,6 +1,6 @@
 package com.bing.entity.VO;
 
 public class PageRequestVO {
-    private int currentPage;
+    private int page;
     private int pageSize;
 }

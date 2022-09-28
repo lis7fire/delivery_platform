@@ -27,9 +27,7 @@ public class EmployeeDO {
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime update_time; //     '更新时间',
 
-    @TableField(fill = FieldFill.INSERT)
     private Long create_user; //   '创建人',
-    @TableField(fill = FieldFill.INSERT_UPDATE)
     private Long update_user; //   '修改人',
 
 }

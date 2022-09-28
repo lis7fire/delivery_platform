@@ -1,8 +1,8 @@
 package com.bing.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.bing.mapper.DishDao;
 import com.bing.entity.DishDO;
+import com.bing.mapper.DishDao;
 import com.bing.service.DishService;
 import org.springframework.stereotype.Service;
 

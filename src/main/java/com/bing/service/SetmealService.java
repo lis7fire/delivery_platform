@@ -1,7 +1,5 @@
 package com.bing.service;
 
-import com.baomidou.mybatisplus.extension.service.IService;
-import com.bing.entity.SetmealDO;
 import org.springframework.stereotype.Service;
 
 /**

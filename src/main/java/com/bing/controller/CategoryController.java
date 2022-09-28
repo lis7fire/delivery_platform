@@ -1,11 +1,21 @@
 package com.bing.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.bing.common.ConstArgs;
+import com.bing.common.ExceptionCodeEnum;
+import com.bing.common.R;
 import com.bing.entity.CategoryDO;
+import com.bing.entity.DTO.CategoryDTO;
+import com.bing.entity.VO.CategoryVO;
+import com.bing.entity.VO.PageRequestVO;
 import com.bing.service.CategoryService;
+import com.bing.util.MyBeanUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 菜品及套餐分类(Category)表控制层
@@ -14,12 +24,14 @@ import javax.annotation.Resource;
  * @since 2022-09-26 22:12:42
  */
 @RestController
-@RequestMapping("category")
+@RequestMapping("/category")
+@Slf4j
 public class CategoryController {
     /**
      * 服务对象
      */
-    @Resource
+//    @Autowired
+    @Resource(type = CategoryService.class)
     private CategoryService categoryService;
 
     /**
@@ -29,10 +41,12 @@ public class CategoryController {
      * @param pageRequest 分页对象
      * @return 查询结果
      */
-//    @GetMapping
-//    public ResponseEntity<Page<CategoryDO>> queryByPage(CategoryDO category, PageRequest pageRequest) {
+    @GetMapping("/page")
+    public ResponseEntity<Page<CategoryDO>> queryByPage(CategoryDO category, PageRequestVO pageRequest) {
+        log.info("分页查询分类情况：{}，查询条件：{}", pageRequest, category);
 //        return ResponseEntity.ok(this.categoryService.queryByPage(category, pageRequest));
-//    }
+        return null;
+    }
 
     /**
      * 通过主键查询单条数据
@@ -40,9 +54,12 @@ public class CategoryController {
      * @param id 主键
      * @return 单条数据
      */
-    @GetMapping("{id}")
-    public ResponseEntity<CategoryDO> queryById(@PathVariable("id") Long id) {
-        return null;
+    @GetMapping("/{id}")
+    public R<CategoryVO> queryById(@PathVariable("id") Long id) {
+        CategoryDTO categoryDTO = categoryService.queryById(id);
+        CategoryVO categoryVO = new CategoryVO();
+        MyBeanUtil.copyProperties(categoryDTO, categoryVO);
+        return R.success(categoryVO);
 //        return ResponseEntity.ok(this.categoryService.queryById(id));
     }
 
@@ -53,9 +70,14 @@ public class CategoryController {
      * @return 新增结果
      */
     @PostMapping
-    public ResponseEntity<CategoryDO> add(CategoryDO category) {
-        return null;
-//        return ResponseEntity.ok(this.categoryService.insert(category));
+    public R<String> add(HttpServletRequest request, CategoryVO category) {
+        CategoryDTO categoryDTO = new CategoryDTO();
+        MyBeanUtil.copyProperties(category, categoryDTO);
+        categoryDTO.setUpdate_user((Long) request.getSession().getAttribute(ConstArgs.EMPLOYEE_ID_SESSION));
+
+        categoryDTO.setCreate_user((Long) request.getSession().getAttribute(ConstArgs.EMPLOYEE_ID_SESSION));
+        categoryService.insert(categoryDTO);
+        return R.success("分类信息：" + category.getName() + "添加成功！");
     }
 
     /**
@@ -65,9 +87,13 @@ public class CategoryController {
      * @return 编辑结果
      */
     @PutMapping
-    public ResponseEntity<CategoryDO> edit(CategoryDO category) {
-        return null;
-//        return ResponseEntity.ok(this.categoryService.update(category));
+    public R<String> edit(HttpServletRequest request, CategoryVO category) {
+        CategoryDTO categoryDTO = new CategoryDTO();
+        MyBeanUtil.copyProperties(category, categoryDTO);
+        categoryDTO.setUpdate_user((Long) request.getSession().getAttribute(ConstArgs.EMPLOYEE_ID_SESSION));
+
+        categoryService.update(categoryDTO);
+        return R.success("分类信息：" + category.getName() + "修改成功！");
     }
 
     /**
@@ -76,11 +102,10 @@ public class CategoryController {
      * @param id 主键
      * @return 删除是否成功
      */
-    @DeleteMapping
-    public ResponseEntity<Boolean> deleteById(Long id) {
-        return null;
-//        return ResponseEntity.ok(this.categoryService.deleteById(id));
+    @DeleteMapping("/{id}")
+    public R<String> deleteById(@PathVariable("id") Long id) {
+        boolean result = categoryService.deleteById(id);
+        return result ? R.success("分类：" + id + "删除成功！") : R.fail(ExceptionCodeEnum.DB_ERROR);
     }
-
 }
 
