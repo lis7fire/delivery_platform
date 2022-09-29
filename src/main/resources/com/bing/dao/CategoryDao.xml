@@ -7,14 +7,15 @@
         <result property="type" column="type" jdbcType="INTEGER"/>
         <result property="name" column="name" jdbcType="VARCHAR"/>
         <result property="sort" column="sort" jdbcType="INTEGER"/>
-        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
-        <result property="createUser" column="create_user" jdbcType="INTEGER"/>
-        <result property="updateUser" column="update_user" jdbcType="INTEGER"/>
+        <result property="create_time" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="update_time" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="create_user" column="create_user" jdbcType="INTEGER"/>
+        <result property="update_user" column="update_user" jdbcType="INTEGER"/>
+
     </resultMap>
 
     <!--查询单个-->
-    <select id="queryById" resultMap="CategoryMap">
+    <select id="queryByIdSql" resultMap="CategoryMap">
         select id,
                type,
                name,
@@ -28,7 +29,7 @@
     </select>
 
     <!--查询指定行数据-->
-    <select id="queryAllByLimit" resultMap="CategoryMap">
+    <select id="queryAllByLimitSql" resultMap="CategoryMap">
         select
         id, type, name, sort, create_time, update_time, create_user, update_user
         from category
@@ -62,7 +63,7 @@
     </select>
 
     <!--统计总行数-->
-    <select id="count" resultType="java.lang.Long">
+    <select id="countSql" resultType="java.lang.Long">
         select count(1)
         from category
         <where>
@@ -94,12 +95,12 @@
     </select>
 
     <!--新增所有列-->
-    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+    <insert id="insertSql" keyProperty="id" useGeneratedKeys="true">
         insert into category(type, name, sort, create_time, update_time, create_user, update_user)
         values (#{type}, #{name}, #{sort}, #{createTime}, #{updateTime}, #{createUser}, #{updateUser})
     </insert>
 
-    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+    <insert id="insertBatchSql" keyProperty="id" useGeneratedKeys="true">
         insert into category(type, name, sort, create_time, update_time, create_user, update_user)
         values
         <foreach collection="entities" item="entity" separator=",">
@@ -108,7 +109,7 @@
         </foreach>
     </insert>
 
-    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+    <insert id="insertOrUpdateBatchSql" keyProperty="id" useGeneratedKeys="true">
         insert into category(type, name, sort, create_time, update_time, create_user, update_user)
         values
         <foreach collection="entities" item="entity" separator=",">
@@ -126,7 +127,7 @@
     </insert>
 
     <!--通过主键修改数据-->
-    <update id="update">
+    <update id="updateSql">
         update category
         <set>
             <if test="type != null">
@@ -155,7 +156,7 @@
     </update>
 
     <!--通过主键删除-->
-    <delete id="deleteById">
+    <delete id="deleteByIdSql">
         delete
         from category
         where id = #{id}

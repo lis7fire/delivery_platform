@@ -1,7 +1,12 @@
 package com.bing.entity;
 
-import java.util.Date;
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * 菜品及套餐分类(Category)实体类
@@ -9,11 +14,12 @@ import java.io.Serializable;
  * @author makejava
  * @since 2022-09-26 22:12:48
  */
+@TableName("category")
 public class CategoryDO implements Serializable {
-    private static final long serialVersionUID = -30087314166101218L;
     /**
      * 主键
      */
+    @TableId
     private Long id;
     /**
      * 类型   1 菜品分类 2 套餐分类
@@ -27,22 +33,14 @@ public class CategoryDO implements Serializable {
      * 顺序
      */
     private Integer sort;
-    /**
-     * 创建时间
-     */
-    private Date createTime;
-    /**
-     * 更新时间
-     */
-    private Date updateTime;
-    /**
-     * 创建人
-     */
-    private Long createUser;
-    /**
-     * 修改人
-     */
-    private Long updateUser;
+
+    @TableField(fill = FieldFill.INSERT)
+    private LocalDateTime create_time; //     '创建时间',
+    @TableField(fill = FieldFill.INSERT_UPDATE)
+    private LocalDateTime update_time; //     '更新时间',
+
+    private Long create_user; //   '创建人',
+    private Long update_user; //   '修改人',
 
 
     public Long getId() {
@@ -77,37 +75,36 @@ public class CategoryDO implements Serializable {
         this.sort = sort;
     }
 
-    public Date getCreateTime() {
-        return createTime;
+    public LocalDateTime getCreate_time() {
+        return create_time;
     }
 
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
+    public void setCreate_time(LocalDateTime create_time) {
+        this.create_time = create_time;
     }
 
-    public Date getUpdateTime() {
-        return updateTime;
+    public LocalDateTime getUpdate_time() {
+        return update_time;
     }
 
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
+    public void setUpdate_time(LocalDateTime update_time) {
+        this.update_time = update_time;
     }
 
-    public Long getCreateUser() {
-        return createUser;
+    public Long getCreate_user() {
+        return create_user;
     }
 
-    public void setCreateUser(Long createUser) {
-        this.createUser = createUser;
+    public void setCreate_user(Long create_user) {
+        this.create_user = create_user;
     }
 
-    public Long getUpdateUser() {
-        return updateUser;
+    public Long getUpdate_user() {
+        return update_user;
     }
 
-    public void setUpdateUser(Long updateUser) {
-        this.updateUser = updateUser;
+    public void setUpdate_user(Long update_user) {
+        this.update_user = update_user;
     }
-
 }
 

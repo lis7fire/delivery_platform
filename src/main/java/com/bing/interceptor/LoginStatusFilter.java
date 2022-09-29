@@ -1,13 +1,10 @@
 package com.bing.interceptor;
 
 import com.alibaba.fastjson2.JSON;
+import com.bing.common.ConstArgs;
 import com.bing.common.R;
 import com.bing.util.MatchUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.omg.PortableInterceptor.Interceptor;
-import org.springframework.stereotype.Component;
-import org.springframework.util.AntPathMatcher;
-import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -45,7 +42,7 @@ public class LoginStatusFilter implements Filter {
 //        2.判断本次请求地址是否需要处理
         boolean check = MatchUtil.check(uri, ignoreUrls);
 //        3.若无需处理，放行  4.判断登录状态，session中已经登录，放行
-        if (check || request.getSession().getAttribute("employeeId_session") != null) {
+        if (check || request.getSession().getAttribute(ConstArgs.EMPLOYEE_ID_SESSION) != null) {
             log.info(" servlet 过滤器 Filter 不处理： {}  === 放行", uri);
             chain.doFilter(request, response); // 放行，向下传递
             return;

@@ -2,10 +2,11 @@ package com.bing.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.bing.common.ConstArgs;
 import com.bing.common.R;
-import com.bing.entity.VO.EmployeeVO;
-import com.bing.entity.EmployeeDO;
 import com.bing.entity.DTO.EmployeeDTO;
+import com.bing.entity.EmployeeDO;
+import com.bing.entity.VO.EmployeeVO;
 import com.bing.service.EmployeeService;
 import com.bing.util.MyBeanUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -41,7 +42,7 @@ public class EmployeeController {
     public R<EmployeeVO> employeeLogin(HttpServletRequest request, @RequestBody EmployeeDTO employeeDTO) {
 
         // 已经登录，通知前端直接跳转，不再查询 DB
-        if (request.getSession().getAttribute("employeeId_session") != null) {
+        if (request.getSession().getAttribute(ConstArgs.EMPLOYEE_ID_SESSION) != null) {
             return R.fail(201, "已经登录，前端直接跳转页面");
         }
         //1、将页面提交的密码password进行md5加密处理;一般将MD5放在前端
@@ -78,8 +79,8 @@ public class EmployeeController {
 
         //7、登录成功，将员工id存入Session并返回登录成功结果
         //session 独立于每个连接，只要一个连接不断，session中设置的本连接的 KV 就不变；每个连接的  getAttribute("employeeId_session") 是不同的
-        request.getSession().setAttribute("employeeId_session", loginResult.getEmployeeID());
-        log.info(" 登录成功，已经写入 session ：{} ", request.getSession().getAttribute("employeeId_session"));
+        request.getSession().setAttribute(ConstArgs.EMPLOYEE_ID_SESSION, loginResult.getEmployeeID());
+        log.info(" 登录成功，已经写入 session ：{} ", request.getSession().getAttribute(ConstArgs.EMPLOYEE_ID_SESSION));
 
 //客户端每次发送的请求都对应一个线程。
         Long threadId = Thread.currentThread().getId();
@@ -97,15 +98,15 @@ public class EmployeeController {
     @PostMapping("/logout")
     public R<String> logout(HttpServletRequest request) {
         //清理Session中保存的当前登录员工的id
-        request.getSession().removeAttribute("employeeId_session");
-        log.info(" 登出操作， 现有的 session ：{} ", request.getSession().getAttribute("employeeId_session"));
+        request.getSession().removeAttribute(ConstArgs.EMPLOYEE_ID_SESSION);
+        log.info(" 登出操作， 现有的 session ：{} ", request.getSession().getAttribute(ConstArgs.EMPLOYEE_ID_SESSION));
         return R.success("退出成功");
     }
 
     @GetMapping("/session")
-    public R<String> getSession(HttpServletRequest httpServletRequest, @RequestBody Map<String, Object> test) {
-        log.error("通过map接收的请求体：{ } 其中的values：{ }", test, test.values());
-        return R.success("当前连接 的 employeeId_session 值为 ：" + httpServletRequest.getSession().getAttribute("employeeId_session"));
+    public R<String> getSession(HttpServletRequest httpServletRequest,@RequestBody Map<String, Object> test) {
+        log.error("通过map接收的请求体：{} 其中的values：{}", test, test.values());
+        return R.success("当前连接 的 employeeId_session 值为 ：" + httpServletRequest.getSession().getAttribute(ConstArgs.EMPLOYEE_ID_SESSION));
     }
 
     /**
@@ -119,8 +120,8 @@ public class EmployeeController {
      */
     @GetMapping("/page") //  参数名不匹配异常类型： IllegalStateException
     public R<IPage> page(HttpServletRequest httpServletRequest,
-                         @RequestParam(value = "page") Integer currentPage,
-                         Integer pageSize, String name) {
+                         @RequestParam(value = "page") int currentPage,
+                         int pageSize, String name) {
         // 调用 service 查询一页
         log.info("所有员工分页查询，page = {},pageSize = {},name = {}", currentPage, pageSize, name);
         Page<EmployeeDO> onePage = employeeService.getByPageByName(currentPage, pageSize, name);
@@ -134,7 +135,7 @@ public class EmployeeController {
             return vo;
         });
 
-        log.info(onePage.getRecords().toString()); // 转换后，Page中保存的是VO
+//        log.info(onePage.getRecords().toString()); // 转换后，Page中保存的是VO
 
         return R.success(onePage);
     }
@@ -185,7 +186,7 @@ public class EmployeeController {
         MyBeanUtil.copyProperties(newEmployeeVO, employeeDTO);
 
         // 获取当前登录用户的 ID 设置其为操作人
-        Long loginEmployeeId = (Long) request.getSession().getAttribute("employeeId_session");
+        Long loginEmployeeId = (Long) request.getSession().getAttribute(ConstArgs.EMPLOYEE_ID_SESSION);
         employeeDTO.setUpdate_user(loginEmployeeId);
 
         return employeeDTO;

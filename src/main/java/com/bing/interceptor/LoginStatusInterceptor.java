@@ -2,13 +2,12 @@ package com.bing.interceptor;
 
 
 import com.alibaba.fastjson2.JSON;
+import com.bing.common.ConstArgs;
 import com.bing.common.R;
-import com.bing.util.MatchUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.WebContentInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -30,7 +29,7 @@ public class LoginStatusInterceptor implements HandlerInterceptor {
 //        1.获取本次请求的URI
         String path = request.getServletPath();
         // 2.判断登录状态，session中已经登录，放行
-        if (null != request.getSession().getAttribute("employeeId_session")) {
+        if (null != request.getSession().getAttribute(ConstArgs.EMPLOYEE_ID_SESSION)) {
             log.info("MVC 拦截器 拦截了 path： {}； === 结果 ===:    放行", path);
 
             //客户端每次发送的请求都对应一个线程。

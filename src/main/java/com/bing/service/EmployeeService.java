@@ -20,7 +20,6 @@ public class EmployeeService {
     @Autowired
     private EmployeeDAO employeeDAO;
 
-
     public boolean save(EmployeeDTO newEmployee) {
         log.info("a: ");
         EmployeeDO employeeDO = dto2DO(newEmployee);

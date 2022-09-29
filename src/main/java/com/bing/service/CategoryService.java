@@ -1,7 +1,11 @@
 package com.bing.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.bing.dao.CategoryDao;
 import com.bing.entity.CategoryDO;
+import com.bing.entity.DTO.CategoryDTO;
+import com.bing.util.MyBeanUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -12,6 +16,8 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class CategoryService {
+    @Autowired
+    private CategoryDao categoryDao;
 
     /**
      * 通过ID查询单条数据
@@ -19,8 +25,11 @@ public class CategoryService {
      * @param id 主键
      * @return 实例对象
      */
-    CategoryDO queryById(Long id) {
-        return null;
+    public CategoryDTO queryById(Long id) {
+        CategoryDO categoryDO = categoryDao.selectById(id);
+        CategoryDTO categoryDTO = new CategoryDTO();
+        MyBeanUtil.copyProperties(categoryDO, categoryDTO);
+        return categoryDTO;
     }
 
     /**
@@ -30,7 +39,11 @@ public class CategoryService {
      * @param pageRequest 分页对象
      * @return 查询结果
      */
-//    Page<CategoryDO> queryByPage(CategoryDO category, PageRequest pageRequest);
+    public Page<CategoryDO> queryByPage(CategoryDTO category, int currentPage, int pageSize) {
+        Page<CategoryDO> categoryDOPage = new Page<>(currentPage, pageSize);
+        categoryDao.selectPage(categoryDOPage, null);
+        return categoryDOPage;
+    }
 
     /**
      * 新增数据
@@ -38,8 +51,12 @@ public class CategoryService {
      * @param category 实例对象
      * @return 实例对象
      */
-    CategoryDO insert(CategoryDO category) {
-        return null;
+    public boolean insert(CategoryDTO category) {
+
+        CategoryDO categoryDO = new CategoryDO();
+        MyBeanUtil.copyProperties(category, categoryDO);
+        boolean result = categoryDao.insert(categoryDO) > 0 ? true : false;
+        return result;
     }
 
     /**
@@ -48,8 +65,11 @@ public class CategoryService {
      * @param category 实例对象
      * @return 实例对象
      */
-    CategoryDO update(CategoryDO category) {
-        return null;
+    public boolean update(CategoryDTO category) {
+        CategoryDO categoryDO = new CategoryDO();
+        MyBeanUtil.copyProperties(category, categoryDO);
+        boolean result = categoryDao.updateById(categoryDO) > 0 ? true : false;
+        return result;
     }
 
     /**
@@ -58,8 +78,8 @@ public class CategoryService {
      * @param id 主键
      * @return 是否成功
      */
-    boolean deleteById(Long id) {
-        return false;
+    public boolean deleteById(Long id) {
+        return categoryDao.deleteByIdSql(id) > 0 ? true : false;
     }
 
 }
