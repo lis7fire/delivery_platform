@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
  */
 
 // 复制于 DO
-public class EmployeeVO {
+public class EmployeeVO extends PageRequestParamsVO{
     // DTO一致
     //防止后端Long类型 到前端 JSON数据 精度丢失 ，前端是string存储的，所以到后端不会有精度丢失
 //    @JsonSerialize(using = ToStringSerializer.class)  // 用MVC配置消息转换器 替代了
