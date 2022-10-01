@@ -22,8 +22,8 @@ public class MPMetaObjectHandler implements MetaObjectHandler {
     @Override
     public void insertFill(MetaObject metaObject) {
         log.info("MP公共字段自动填充：start [插入操作，自动填充] fill ....");
-        metaObject.setValue("create_time", LocalDateTime.now());
-        metaObject.setValue("update_time", LocalDateTime.now());
+        metaObject.setValue("createTime", LocalDateTime.now());
+        metaObject.setValue("updateTime", LocalDateTime.now());
         //客户端每次发送的请求都对应一个线程。
         Long threadId = Thread.currentThread().getId();
         log.info("对应线程id：{}", threadId);
@@ -34,6 +34,6 @@ public class MPMetaObjectHandler implements MetaObjectHandler {
     @Override
     public void updateFill(MetaObject metaObject) {
         log.info("MP公共字段自动填充：start [更新操作，自动填充] fill ....");
-        metaObject.setValue("update_time", LocalDateTime.now());
+        metaObject.setValue("updateTime", LocalDateTime.now());
     }
 }

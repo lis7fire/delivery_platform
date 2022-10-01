@@ -22,18 +22,22 @@ public enum ExceptionCodeEnum {
 
     SUCCESS(1, "success"),
 
-    REQUEST_PARAMETER_NOT_MATCH(10400   , "用户请求 参数名 不匹配"),
-    REQUEST_PARAMETER_VALUE_NOT_MATCH(10421   , "用户请求 参数值类型 不匹配"),
+    REQUEST_PARAMETER_NOT_MATCH(10400, "用户请求 参数名 不匹配"),
+    REQUEST_PARAMETER_VALUE_NOT_MATCH(10421, "用户请求 参数值类型 不匹配"),
     SAME_LOGIN_NAME_EXIST(10111, "用户名已存在！"),
     LOGIN_NAME_NULL(10110, "请输入登录名！"),
     LOGIN_PASSWORD_NULL(10120, "请输入密码！"),
     LOGIN_VERIFY_CODE_NULL(10130, "请输入验证码！"),
     LOGIN_VERIFY_CODE_ERROR(10130, "验证码错误！"),
+    CATEGORY_USING(10431, "分类正在被使用，无法删除！"),
 
     LOGIN_ERROR(10200, "登录失败！"),
 
     LOGIN_USER_LOCKED(10202, "用户已被禁止登录！"),
     OPERATE_ERROR(20001, "系统执行出错，操作失败！"),
+    READ_FILE_ERROR(20321, "系统读取磁盘文件失败！"),
+    IO_EXCEPTION(20311, "文件保存出错！"),
+
 
     NO_PERMISSION_ERROR(10301, "访问未授权无操作权限！"),
 
@@ -44,7 +48,6 @@ public enum ExceptionCodeEnum {
      * SAME_CATEGORY_EXIST("已存在同级同名的分类！"),
      * SAME_INDEX_CONFIG_EXIST("已存在相同的首页配置项！"),
      * GOODS_CATEGORY_ERROR("分类数据异常！"),
-     * SAME_GOODS_EXIST("已存在相同的商品信息！"),
      * GOODS_NOT_EXIST("商品不存在！"),
      * GOODS_PUT_DOWN("商品已下架！"),
      * SHOPPING_CART_ITEM_LIMIT_NUMBER_ERROR("超出单个商品的最大购买数量！"),

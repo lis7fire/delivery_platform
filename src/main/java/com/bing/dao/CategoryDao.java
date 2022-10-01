@@ -3,6 +3,7 @@ package com.bing.dao;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.bing.entity.CategoryDO;
 import com.bing.entity.VO.PageRequestParamsVO;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -81,6 +82,7 @@ public interface CategoryDao extends BaseMapper<CategoryDO> {
      * @param id 主键
      * @return 影响行数
      */
+    @Delete("delete from category  where id = #{id}")
     int deleteByIdSql(Long id);
 
 }

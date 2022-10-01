@@ -1,26 +1,31 @@
 package com.bing.controller;
 
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.bing.common.ConstArgs;
 import com.bing.common.R;
+import com.bing.entity.DTO.DishDTO;
 import com.bing.entity.DishDO;
+import com.bing.entity.VO.DishVO;
 import com.bing.service.DishService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.io.Serializable;
+import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * 菜品管理(Dish)表控制层
+ * 菜品管理(DishDO)表控制层
  *
  * @author makejava
- * @since 2022-09-26 22:23:52
+ * @since 2022-09-29 09:21:57
  */
 @RestController
-@RequestMapping("dish")
-public class DishController   {
+@RequestMapping("/dish")
+@Slf4j
+public class DishController {
     /**
      * 服务对象
      */
@@ -28,59 +33,108 @@ public class DishController   {
     private DishService dishService;
 
     /**
-     * 分页查询所有数据
+     * 完成-待优化分页查询所有数据
      *
-     * @param page 分页对象
+     * @param dish 分页对象
      * @param dish 查询实体
      * @return 所有数据
      */
-    @GetMapping
-    public R selectAll(Page<DishDO> page, DishDO dish) {
-        return R.success(this.dishService.page(page, new QueryWrapper<>(dish)));
+    @GetMapping("/page") // Page<DishDO> page, DishDO DishDO
+    public R<Page<DishDO>> selectByPage(HttpServletRequest request, DishVO dish) {
+        log.info(String.valueOf(dish));
+//        request.getQueryString()
+        request.getRequestURL();
+        Page<DishDO> onePage = dishService.queryByPage(dish);
+
+//        return R.success(this.dishService.page(page, new QueryWrapper<>(DishDO)));
+        return R.success(onePage);
     }
 
     /**
-     * 通过主键查询单条数据
+     * 查询菜品列表
      *
      * @param id 主键
      * @return 单条数据
      */
-    @GetMapping("{id}")
-    public R selectOne(@PathVariable Serializable id) {
-        return R.success(this.dishService.getById(id));
+    @GetMapping("/list")
+    public R selectOne(List<Long> idsList) {
+        return R.success(this.dishService.queryById(1L));
+    }
+
+
+    /**
+     * 完成-通过主键查询单条数据
+     *
+     * @param id 主键
+     * @return 单条数据
+     */
+    @GetMapping("/{id}")
+    public R<DishDTO> selectOne(@PathVariable("id") long id) {
+        return R.success(dishService.getByIdWithFlavor(id));
     }
 
     /**
-     * 新增数据
+     * 完成-新增数据
      *
-     * @param dish 实体对象
+     * @param Dish 实体对象
      * @return 新增结果
      */
     @PostMapping
-    public R insert(@RequestBody DishDO dish) {
-        return R.success(this.dishService.save(dish));
+    public R<String> insert(HttpServletRequest request, @RequestBody DishDTO Dish) {
+        log.info("新增接收的数据：{}", Dish);
+        setTimeUser(request, Dish, true);
+        dishService.saveWithFlavor(Dish);
+        return R.success("新增菜品： " + Dish.getName() + " 成功");
     }
 
     /**
-     * 修改数据
+     * 完成-修改数据
      *
-     * @param dish 实体对象
+     * @param Dish 实体对象
      * @return 修改结果
      */
     @PutMapping
-    public R update(@RequestBody DishDO dish) {
-        return R.success(this.dishService.updateById(dish));
+    public R<String> update(HttpServletRequest request,@RequestBody DishDTO Dish) {
+        setTimeUser(request, Dish, false);
+        dishService.updateWithFlavor(Dish);
+        return R.success("修改菜品： " + Dish.getName() + " 成功");
     }
 
     /**
-     * 删除数据
+     * 完成-【批量】删除数据
      *
      * @param idList 主键结合
      * @return 删除结果
      */
     @DeleteMapping
-    public R delete(@RequestParam("idList") List<Long> idList) {
-        return R.success(this.dishService.removeByIds(idList));
+    public R<String> delete(@RequestParam("ids") List<Long> idList) {
+        dishService.removeByIds(idList);
+        return R.success("菜品批量删除成功！");
     }
+
+
+    /**
+     * 完成- 起售/停售 - 批量起售停售
+     *
+     * @param idList 主键列表
+     * @return 删除结果
+     */
+    @PostMapping("/status/{newStatus}")
+    public R<String> stopSelling(@RequestParam("ids") List<Long> idList, @PathVariable int newStatus) {
+        dishService.editStatus(idList, newStatus);
+        return R.success("菜品状态更新成功！");
+    }
+
+
+    private void setTimeUser(HttpServletRequest request, DishDO entityDo, boolean isInsert) {
+        request.getSession().setAttribute(ConstArgs.EMPLOYEE_ID_SESSION, 1L);
+        if (isInsert) {
+            entityDo.setCreateTime(LocalDateTime.now());
+            entityDo.setCreateUser((Long) request.getSession().getAttribute(ConstArgs.EMPLOYEE_ID_SESSION));
+        }
+        entityDo.setUpdateTime(LocalDateTime.now());
+        entityDo.setUpdateUser((Long) request.getSession().getAttribute(ConstArgs.EMPLOYEE_ID_SESSION));
+    }
+
 }
 

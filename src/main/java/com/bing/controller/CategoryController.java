@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * 菜品及套餐分类(Category)表控制层
@@ -35,7 +36,7 @@ public class CategoryController {
     /**
      * 分页查询
      *
-     * @param pageRequest 分页对象
+     * @param category pageRequest 分页对象
      * @param category    筛选条件
      * @return 查询结果
      */
@@ -72,6 +73,21 @@ public class CategoryController {
     }
 
     /**
+     * 查询分类列表，是属于 菜品，还是属于套餐
+     *
+     * @param category type 分类类型， 1 菜品分类 2 套餐分类
+     * @return 多条数据
+     */
+    @GetMapping("/list")
+    public R<List<CategoryVO>> queryListByType(CategoryVO category) {
+
+        List<CategoryDTO> categoryDTO = categoryService.queryByType(category);
+        List<CategoryVO> categoryVO = MyBeanUtil.copyList(categoryDTO, CategoryVO.class, null);
+        return R.success(categoryVO);
+//        return ResponseEntity.ok(this.categoryService.queryById(id));
+    }
+
+    /**
      * 新增数据
      *
      * @param category 实体
@@ -81,9 +97,9 @@ public class CategoryController {
     public R<String> add(HttpServletRequest request, @RequestBody CategoryVO category) {
         CategoryDTO categoryDTO = new CategoryDTO();
         MyBeanUtil.copyProperties(category, categoryDTO);
-        categoryDTO.setUpdate_user((Long) request.getSession().getAttribute(ConstArgs.EMPLOYEE_ID_SESSION));
+        categoryDTO.setUpdateUser((Long) request.getSession().getAttribute(ConstArgs.EMPLOYEE_ID_SESSION));
 
-        categoryDTO.setCreate_user((Long) request.getSession().getAttribute(ConstArgs.EMPLOYEE_ID_SESSION));
+        categoryDTO.setCreateUser((Long) request.getSession().getAttribute(ConstArgs.EMPLOYEE_ID_SESSION));
         categoryService.insert(categoryDTO);
         return R.success("分类信息：" + category.getName() + " 添加成功！");
     }
@@ -98,14 +114,14 @@ public class CategoryController {
     public R<String> edit(HttpServletRequest request, @RequestBody CategoryVO category) {
         CategoryDTO categoryDTO = new CategoryDTO();
         MyBeanUtil.copyProperties(category, categoryDTO);
-        categoryDTO.setUpdate_user((Long) request.getSession().getAttribute(ConstArgs.EMPLOYEE_ID_SESSION));
+        categoryDTO.setUpdateUser((Long) request.getSession().getAttribute(ConstArgs.EMPLOYEE_ID_SESSION));
 
         categoryService.update(categoryDTO);
         return R.success("分类信息：" + category.getName() + "修改成功！");
     }
 
     /**
-     * 删除数据
+     * 删除数据，【先要判断 菜品表和 套餐表中是否引用了此分类，若引用则无法删除】
      * 通过 URL 路径传值。未使用
      *
      * @param id 主键
@@ -118,7 +134,7 @@ public class CategoryController {
     }
 
     /**
-     * 删除数据
+     * 应该修改为逻辑删除- 删除数据
      *
      * @param id 主键
      * @return 删除是否成功

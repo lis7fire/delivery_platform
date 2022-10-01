@@ -1,7 +1,5 @@
 package com.bing.entity.DTO;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
@@ -34,12 +32,10 @@ public class CategoryDTO implements Serializable {
      */
     private Integer sort;
 
-    @TableField(fill = FieldFill.INSERT)
-    private LocalDateTime create_time; //     '创建时间',
-    @TableField(fill = FieldFill.INSERT_UPDATE)
-    private LocalDateTime update_time; //     '更新时间',
+    private LocalDateTime createTime; //     '创建时间',
+    private LocalDateTime updateTime; //     '更新时间',
 
-    private Long create_user; //   '创建人',
-    private Long update_user; //   '修改人',
+    private Long createUser; //   '创建人',
+    private Long updateUser; //   '修改人',
 }
 
