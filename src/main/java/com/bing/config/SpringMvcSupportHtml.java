@@ -32,7 +32,11 @@ public class SpringMvcSupportHtml extends WebMvcConfigurationSupport {
     protected void addInterceptors(InterceptorRegistry registry) {
         // 添加一个 MVC拦截器，拦截以 /admin 为前缀的url路径（后台登陆拦截）
         registry.addInterceptor(loginStatusInterceptor)
-                .addPathPatterns("/employee/**") // 拦截的地址
+                .addPathPatterns("/employee/**") // 拦截的地址,员工管理
+//                .addPathPatterns("/category/**")// 拦截的地址,分类管理
+//                .addPathPatterns("/dish/**")// 拦截的地址,菜品管理
+//                .addPathPatterns("/setmeal/**")// 拦截的地址,套餐管理
+//                .addPathPatterns("/order/**")// 拦截的地址,订单管理
                 // 以下为排除的地址,只针对 @controller 注解的地址有效
                 .excludePathPatterns("/employee/login")
                 .excludePathPatterns("/employee/logout")

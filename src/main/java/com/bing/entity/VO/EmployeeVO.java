@@ -26,11 +26,11 @@ public class EmployeeVO extends PageRequestParamsVO{
     private String idNumber; // '身份证号',
     private int status; //   '状态 0:禁用，1:正常',
     // 比DTO多的
-    private Long create_user; //   '创建人',
-    private Long update_user; //   '修改人',
+    private Long createUser; //   '创建人',
+    private Long updateUser; //   '修改人',
     //    @JsonSerialize(using = LocalDateTimeToStringConverter.class)
-    private LocalDateTime create_time; //     '创建时间',
-    private LocalDateTime update_time; //     '更新时间',
+    private LocalDateTime createTime; //     '创建时间',
+    private LocalDateTime updateTime; //     '更新时间',
 
     // 只在 DO中
     //    private String password; // '密码',

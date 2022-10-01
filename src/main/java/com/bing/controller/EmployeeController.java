@@ -160,7 +160,7 @@ public class EmployeeController {
         log.info("新增员工,传入信息:{}", newEmployeeVO);
 
         EmployeeDTO employeeDTO = vo2DTO(request, newEmployeeVO);
-        employeeDTO.setCreate_user(employeeDTO.getUpdate_user());
+        employeeDTO.setCreateUser(employeeDTO.getUpdateUser());
 
         boolean result = employeeService.save(employeeDTO);
 
@@ -187,7 +187,7 @@ public class EmployeeController {
 
         // 获取当前登录用户的 ID 设置其为操作人
         Long loginEmployeeId = (Long) request.getSession().getAttribute(ConstArgs.EMPLOYEE_ID_SESSION);
-        employeeDTO.setUpdate_user(loginEmployeeId);
+        employeeDTO.setUpdateUser(loginEmployeeId);
 
         return employeeDTO;
     }

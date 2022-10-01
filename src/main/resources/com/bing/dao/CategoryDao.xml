@@ -3,15 +3,14 @@
 <mapper namespace="com.bing.dao.CategoryDao">
 
     <resultMap type="com.bing.entity.CategoryDO" id="CategoryMap">
-        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="id" column="id" jdbcType="BIGINT"/>
         <result property="type" column="type" jdbcType="INTEGER"/>
         <result property="name" column="name" jdbcType="VARCHAR"/>
         <result property="sort" column="sort" jdbcType="INTEGER"/>
-        <result property="create_time" column="create_time" jdbcType="TIMESTAMP"/>
-        <result property="update_time" column="update_time" jdbcType="TIMESTAMP"/>
-        <result property="create_user" column="create_user" jdbcType="INTEGER"/>
-        <result property="update_user" column="update_user" jdbcType="INTEGER"/>
-
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="createUser" column="create_user" jdbcType="BIGINT"/>
+        <result property="createUser" column="update_user" jdbcType="BIGINT"/>
     </resultMap>
 
     <!--查询单个-->
@@ -154,13 +153,6 @@
         </set>
         where id = #{id}
     </update>
-
-    <!--通过主键删除-->
-    <delete id="deleteByIdSql">
-        delete
-        from category
-        where id = #{id}
-    </delete>
 
 </mapper>
 

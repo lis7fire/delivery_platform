@@ -4,29 +4,43 @@ spring:
   application:
     name: delivery_platform
   datasource:
-    hikari:
-      maximum-pool-size: 8
-      minimum-idle: 3
-    #    type: com.alibaba.druid.pool.DruidDataSource
-    #    druid:
+    type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://127.0.0.1:3306/ssm_db?serverTimezone=Asia/Shanghai&characterEncoding=utf8
     username: linghdl
     password: jgidlem!$
-    #    connect-timeout: 6000
-    #    initial-size: 3   # 一直保持的连接数量,默认为 0，需要设置，否则容易前端超时
-    #    min-idle: 5  # 一直保持的连接数量
+
+    druid:
+      connect-timeout: 6000
+      initial-size: 3   # 一直保持的连接数量,默认为 0，需要设置，否则容易前端超时
+      min-idle: 5  # 一直保持的连接数量
+
+    hikari:
+      maximum-pool-size: 8
+      minimum-idle: 3
+
+  servlet:
+    multipart:
+      #上传文件大小设置
+      max-file-size: 100MB
+      max-request-size: 100MB
+
 mybatis-plus:
   type-aliases-package: com.bing.entity
-  #  默认扫描启动类目录为根目录
-  mapper-locations: classpath:/mapper/*.xml
+  #  默认扫描启动类目录为根目录,默认配置文件中就是："classpath*:/mapper/**/*.xml"
+  #  mapper-locations: classpath:/mapper/*.xml
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     map-underscore-to-camel-case: false
   global-config:
     db-config:
       id-type: assign_id
-
 logging:
   level:
     root: info
+    com.bing.mapper: debug
+    com.bing.dao: debug
+    com.bing.service: info
+myProject:
+  filePath: E:\Javaweb\tmpfileupload\
+

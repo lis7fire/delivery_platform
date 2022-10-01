@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
  * @since 2022-09-26 22:23:52
  */
 @Data
-public class DishVO {
+public class DishVO extends PageRequestParamsVO{
     //主键
     private Long id;
     //菜品名称
@@ -31,11 +31,11 @@ public class DishVO {
     //顺序
     private Integer sort;
 
-    private LocalDateTime create_time; //     '创建时间',
-    private LocalDateTime update_time; //     '更新时间',
+    private LocalDateTime createTime; //     '创建时间',
+    private LocalDateTime updateTime; //     '更新时间',
 
-    private Long create_user; //   '创建人',
-    private Long update_user; //   '修改人',
+    private Long createUser; //   '创建人',
+    private Long updateUser; //   '修改人',
 
     //是否删除,1删除
     private Integer isDeleted;

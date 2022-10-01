@@ -6,6 +6,6 @@ import lombok.Setter;
 @Setter
 @Getter
 public class PageRequestParamsVO {
-    private int page; 
+    private int page;
     private int pageSize;
 }

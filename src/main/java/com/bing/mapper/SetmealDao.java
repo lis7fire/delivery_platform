@@ -12,6 +12,7 @@ import java.util.List;
  * @author makejava
  * @since 2022-09-27 08:44:50
  */
+//@Mapper
 public interface SetmealDao extends BaseMapper<SetmealDO> {
 
     /**

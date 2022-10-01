@@ -23,7 +23,7 @@ public class EmployeeService {
     public boolean save(EmployeeDTO newEmployee) {
         log.info("a: ");
         EmployeeDO employeeDO = dto2DO(newEmployee);
-        employeeDO.setCreate_time(LocalDateTime.now());
+        employeeDO.setCreateTime(LocalDateTime.now());
         // 设置 默认初始密码 == 用户名相同
         employeeDO.setPassword(DigestUtils.md5DigestAsHex(employeeDO.getUsername().getBytes()));
 
@@ -95,7 +95,7 @@ public class EmployeeService {
             queryWrapper.likeRight(!name.isEmpty(), EmployeeDO::getName, name);
         }
         // 以 更新时间 降序
-        queryWrapper.orderByDesc(EmployeeDO::getUpdate_time);
+        queryWrapper.orderByDesc(EmployeeDO::getUpdateTime);
         // 采用 MP的分页查询， MP的分页查询效率低，最好自己优化实现，不用MP的此插件
         Page<EmployeeDO> onePage = new Page<>(currenPage, psize);
         employeeDAO.selectPage(onePage, queryWrapper);

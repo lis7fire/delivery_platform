@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bing.mapper.DishDao">
+
+    <resultMap type="com.bing.entity.DishDO" id="DishMap">
+        <result property="id" column="id" jdbcType="BIGINT"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="categoryId" column="category_id" jdbcType="BIGINT"/>
+        <result property="price" column="price" jdbcType="DECIMAL"/>
+        <result property="code" column="code" jdbcType="VARCHAR"/>
+        <result property="image" column="image" jdbcType="VARCHAR"/>
+        <result property="description" column="description" jdbcType="VARCHAR"/>
+        <result property="status" column="status" jdbcType="INTEGER"/>
+        <result property="sort" column="sort" jdbcType="INTEGER"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="createUser" column="create_user" jdbcType="BIGINT"/>
+        <result property="updateUser" column="update_user" jdbcType="BIGINT"/>
+        <result property="isDeleted" column="is_deleted" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryByIdSql" resultMap="DishMap">
+        select id,
+               name,
+               category_id,
+               price,
+               code,
+               image,
+               description,
+               status,
+               sort,
+               create_time,
+               update_time,
+               create_user,
+               update_user,
+               is_deleted
+        from dish
+        where id = #{id}
+    </select>
+
+    <!--无条件 分页 查询 所有菜品列表 -->
+    <select id="queryAllByLimitPageSql" resultMap="DishMap">
+        select id,
+               name,
+               category_id,
+               price,
+               code,
+               image,
+               description,
+               status,
+               sort,
+               create_time,
+               update_time,
+               create_user,
+               update_user,
+               is_deleted
+        from dish
+        where is_deleted = 0
+        limit #{startIndex}, #{pageSize}
+    </select>
+    <!--查询指定行数据-->
+    <select id="queryByLimitPageSql" resultMap="DishMap">
+        select
+        id, name, category_id, price, code, image, description, status, sort, create_time, update_time, create_user,
+        update_user, is_deleted
+        from dish
+        <where>
+            <if test="DishDO.name != null and DishDO.name != ''">
+                and name like concat('%',#{DishDO.name,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="DishDO.isDeleted != null">
+                and is_deleted = #{DishDO.isDeleted}
+            </if>
+        </where>
+        limit #{startIndex}, #{pageSize}
+    </select>
+
+    <!--统计总行数-->
+    <select id="countSql" parameterType="com.bing.entity.DishDO" resultType="int">
+        select count(1)
+        from dish
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="name != null and name != ''">
+                and name like concat('%',#{name,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="categoryId != null">
+                and category_id = #{categoryId}
+            </if>
+            <if test="price != null">
+                and price = #{price}
+            </if>
+            <if test="code != null and code != ''">
+                and code = #{code}
+            </if>
+            <if test="image != null and image != ''">
+                and image = #{image}
+            </if>
+            <if test="description != null and description != ''">
+                and description = #{description}
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+            <if test="sort != null">
+                and sort = #{sort}
+            </if>
+            <if test="createTime  != null">
+                and create_time = #{createTime}
+            </if>
+            <if test="updateTime  != null">
+                and update_time = #{updateTime}
+            </if>
+            <if test="createUser != null">
+                and create_user = #{createUser}
+            </if>
+            <if test="updateUser != null">
+                and update_user = #{updateUser}
+            </if>
+            <if test="isDeleted != null">
+                and is_deleted = #{isDeleted}
+            </if>
+        </where>
+    </select>
+
+    <!--只以删除状态为条件，统计总行数-->
+    <select id="countAllSql" resultType="java.lang.Long">
+        select count(1)
+        from dish
+        <where>
+            <if test="isDeleted != null">
+                and is_deleted = #{isDeleted}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insertSql" parameterType="com.bing.entity.DishDO" keyProperty="id" useGeneratedKeys="true">
+        insert into dish
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            name, category_id, price, code, image, description, status,
+            create_time, update_time, create_user, update_user,
+            <if test="sort != null">sort</if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            #{name}, #{categoryId}, #{price}, #{code}, #{image}, #{description}, #{status},
+            #{createTime}, #{updateTime}, #{createUser}, #{updateUser}
+            <if test="sort != null">#{sort},</if>
+        </trim>
+    </insert>
+
+    <insert id="insertBatchSql" keyProperty="id" useGeneratedKeys="true">
+        insert into dish(name, category_id, price, code, image, description, status, sort, create_time, update_time,
+        create_user, update_user, is_deleted)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.name}, #{entity.categoryId}, #{entity.price}, #{entity.code}, #{entity.image},
+            #{entity.description}, #{entity.status}, #{entity.sort}, #{entity.createTime}, #{entity.updateTime},
+            #{entity.createUser}, #{entity.updateUser}, #{entity.isDeleted})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatchSql" keyProperty="id" useGeneratedKeys="true">
+        insert into dish(name, category_id, price, code, image, description, status, sort, create_time, update_time,
+        create_user, update_user, is_deleted)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.name}, #{entity.categoryId}, #{entity.price}, #{entity.code}, #{entity.image},
+            #{entity.description}, #{entity.status}, #{entity.sort}, #{entity.createTime}, #{entity.updateTime},
+            #{entity.createUser}, #{entity.updateUser}, #{entity.isDeleted})
+        </foreach>
+        on duplicate key update
+        name = values(name),
+        category_id = values(category_id),
+        price = values(price),
+        code = values(code),
+        image = values(image),
+        description = values(description),
+        status = values(status),
+        sort = values(sort),
+        create_time = values(create_time),
+        update_time = values(update_time),
+        create_user = values(create_user),
+        update_user = values(update_user),
+        is_deleted = values(is_deleted)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="updateSql">
+        update dish
+        <set>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="categoryId != null">
+                category_id = #{categoryId},
+            </if>
+            <if test="price != null">
+                price = #{price},
+            </if>
+            <if test="code != null and code != ''">
+                code = #{code},
+            </if>
+            <if test="image != null and image != ''">
+                image = #{image},
+            </if>
+            <if test="description != null and description != ''">
+                description = #{description},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="sort != null">
+                sort = #{sort},
+            </if>
+            <if test="createTime  != null">
+                create_time = #{createTime},
+            </if>
+            <if test="updateTime  != null">
+                update_time = #{updateTime},
+            </if>
+            <if test="createUser != null">
+                create_user = #{createUser},
+            </if>
+            <if test="updateUser != null">
+                update_user = #{updateUser},
+            </if>
+            <if test="isDeleted != null">
+                is_deleted = #{isDeleted},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键【真实】删除 未使用 -->
+    <delete id="deleteByIdSql">
+        delete
+        from dish
+        where id = #{id}
+    </delete>
+    <!--通过主键【逻辑】批量删除-->
+    <update id="editDeleteByIdSql" parameterType="arraylist">
+        update dish
+        set is_deleted = 1 , status = 0
+        where id in
+        <foreach collection="dishIdList" item="id" separator="," open="(" close=")" index="index">
+            #{id}
+        </foreach>
+    </update>
+    <!--通过主键修改【上下架状态】   open="(" close=")" 必须要带上，否则报错，用来生成SQL语句中 in (),这个括号 -->
+    <update id="editStatusByIdSql" parameterType="arraylist">
+        update dish
+        set status = #{newStatus}
+        where id in
+        <foreach collection="dishIdList" item="id" separator="," open="(" close=")" index="index">
+            #{id}
+        </foreach>
+    </update>
+
+</mapper>
+
