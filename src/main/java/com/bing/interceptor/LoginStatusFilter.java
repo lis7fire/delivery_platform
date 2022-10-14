@@ -20,7 +20,7 @@ import java.io.IOException;
  * @时间: 2022/9/20
  */
 @Slf4j
-//@Component // 过滤器必须成为Bean
+//@Component // 未启用， 过滤器必须成为Bean
 @WebFilter(filterName = "loginStatusFilter", urlPatterns = "/*")
 public class LoginStatusFilter implements Filter {
 

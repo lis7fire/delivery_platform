@@ -62,21 +62,29 @@ public class DishService {
         return onePage;
     }
 
+
     /**
-     * 按 ID 查询单个详情
+     * 按 菜品类型 查询有哪些菜品
      *
-     * @param id 一个主键
+     * @param categoryId 一个菜品种类
+     * @return 多条菜品
+     * @author: LiBingYan
+     * @时间: 2022/9/29
+     */
+    public List<DishDO> queryBycategoryId(long categoryId) {
+        List<DishDO> dishs=  dishDao.queryByColSql(categoryId);
+        return dishs;
+    }
+
+    /**
+     * 根据id查询菜品详情 和 对应的口味信息
+     *
+     * @param dishId 一个主键
      * @return 一条数据
      * @author: LiBingYan
      * @时间: 2022/9/29
      */
-    public DishDO queryById(long id) {
-        DishDO dishDO = dishDao.queryByIdSql(id);
-        return dishDO;
-    }
-
-    //根据id查询菜品信息和对应的口味信息
-    public DishDTO getByIdWithFlavor(Long dishId) {
+    public DishDTO getInfoByIdWithFlavor(Long dishId) {
         DishDO dish = dishDao.queryByIdSql(dishId);
         DishDTO dishDTO = new DishDTO();
         MyBeanUtil.copyProperties(dish, dishDTO);
@@ -185,9 +193,9 @@ public class DishService {
         return true;
     }
 
-//    查询满足条件的行数
+    //    查询满足条件的行数
     public int count(DishDO dishDO) {
-        return  dishDao.countSql(dishDO);
+        return dishDao.countSql(dishDO);
     }
 }
 

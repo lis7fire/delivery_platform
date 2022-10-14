@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="com.bing.mapper.DishDao">
 
     <resultMap type="com.bing.entity.DishDO" id="DishMap">
@@ -18,52 +19,40 @@
         <result property="updateUser" column="update_user" jdbcType="BIGINT"/>
         <result property="isDeleted" column="is_deleted" jdbcType="INTEGER"/>
     </resultMap>
+    <sql id="selectClumns">
+        id,name,category_id,price,code,image,description,status,sort,
+create_time,update_time,create_user,update_user,is_deleted
 
+    </sql>
     <!--查询单个-->
     <select id="queryByIdSql" resultMap="DishMap">
-        select id,
-               name,
-               category_id,
-               price,
-               code,
-               image,
-               description,
-               status,
-               sort,
-               create_time,
-               update_time,
-               create_user,
-               update_user,
-               is_deleted
+        select
+        <include refid="selectClumns"/>
         from dish
         where id = #{id}
     </select>
 
+    <!--按照某个列查询 id 列表-->
+    <select id="queryByColSql" resultMap="DishMap">
+        select
+        <include refid="selectClumns"/>
+        from dish
+        where category_id = #{categoryId}
+    </select>
+
     <!--无条件 分页 查询 所有菜品列表 -->
     <select id="queryAllByLimitPageSql" resultMap="DishMap">
-        select id,
-               name,
-               category_id,
-               price,
-               code,
-               image,
-               description,
-               status,
-               sort,
-               create_time,
-               update_time,
-               create_user,
-               update_user,
-               is_deleted
+        select
+        <include refid="selectClumns"/>
         from dish
         where is_deleted = 0
         limit #{startIndex}, #{pageSize}
     </select>
+
     <!--查询指定行数据-->
     <select id="queryByLimitPageSql" resultMap="DishMap">
         select
-        id, name, category_id, price, code, image, description, status, sort, create_time, update_time, create_user,
-        update_user, is_deleted
+        <include refid="selectClumns"/>
         from dish
         <where>
             <if test="DishDO.name != null and DishDO.name != ''">

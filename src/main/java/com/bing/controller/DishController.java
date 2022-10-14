@@ -51,14 +51,15 @@ public class DishController {
     }
 
     /**
-     * 查询菜品列表
+     * 查询某种类型的 菜品列表,套餐模块使用
      *
      * @param id 主键
      * @return 单条数据
      */
     @GetMapping("/list")
-    public R selectOne(List<Long> idsList) {
-        return R.success(this.dishService.queryById(1L));
+    public R<List<DishDO>> selectOne(@RequestParam("categoryId") Long categoryId) {
+        log.info("需要查询的菜品种类为：{}", categoryId);
+        return R.success(this.dishService.queryBycategoryId(categoryId));
     }
 
 
@@ -70,7 +71,7 @@ public class DishController {
      */
     @GetMapping("/{id}")
     public R<DishDTO> selectOne(@PathVariable("id") long id) {
-        return R.success(dishService.getByIdWithFlavor(id));
+        return R.success(dishService.getInfoByIdWithFlavor(id));
     }
 
     /**
@@ -94,7 +95,7 @@ public class DishController {
      * @return 修改结果
      */
     @PutMapping
-    public R<String> update(HttpServletRequest request,@RequestBody DishDTO Dish) {
+    public R<String> update(HttpServletRequest request, @RequestBody DishDTO Dish) {
         setTimeUser(request, Dish, false);
         dishService.updateWithFlavor(Dish);
         return R.success("修改菜品： " + Dish.getName() + " 成功");

@@ -1,38 +1,53 @@
 package com.bing.entity;
 
-
 import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * 套餐(Setmeal)表实体类
+ * 套餐菜品关系(SetmealDish)实体类
  *
  * @author makejava
- * @since 2022-09-27 08:44:51
+ * @since 2022-10-08 22:31:23
  */
 @Data
-@TableName("setmeal")
-public class SetmealDO {
-    //主键
-    @TableId
+@TableName("setmeal_dish")
+public class SetmealDish implements Serializable {
+    private static final long serialVersionUID = -99464451370546586L;
+    /**
+     * 主键
+     */
+    @TableId(type = IdType.AUTO)
     private Long id;
-    //菜品分类id
-    @TableField("category_id")
-    private Long categoryId;
-    //套餐名称
+    /**
+     * 套餐id
+     */
+    @TableField("setmeal_id")
+    private Long setmealId;
+    /**
+     * 菜品id
+     */
+    @TableField("dish_id")
+    private Long dishId;
+    /**
+     * 菜品名称 （冗余字段）
+     */
     private String name;
-    //套餐价格
+    /**
+     * 菜品原价（冗余字段）
+     */
     private Double price;
-    //状态 0:停用 1:启用
-    private Integer status;
-    //编码
-    private String code;
-    //描述信息
-    private String description;
-    //图片
-    private String image;
+    /**
+     * 份数
+     */
+    private Integer copies;
+    /**
+     * 排序
+     */
+    private Integer sort;
+
 
     //创建时间
     @TableField(value = "create_time", fill = FieldFill.INSERT)
@@ -48,7 +63,6 @@ public class SetmealDO {
     private Long updateUser;
     //是否删除；1删除
     @TableField("is_deleted")
-    @TableLogic(value = "0", delval = "1")
     private Integer isDeleted;
 
 }

@@ -21,6 +21,9 @@ public interface DishDao {
      */
     DishDO queryByIdSql(Long id);
 
+//    按照某个列查询 id 列
+   List<DishDO>  queryByColSql(Long categoryId);
+
 
     /**
      * 无条件，分页查询，所有菜品

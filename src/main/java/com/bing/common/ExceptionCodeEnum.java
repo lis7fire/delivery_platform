@@ -26,10 +26,15 @@ public enum ExceptionCodeEnum {
     REQUEST_PARAMETER_VALUE_NOT_MATCH(10421, "用户请求 参数值类型 不匹配"),
     SAME_LOGIN_NAME_EXIST(10111, "用户名已存在！"),
     LOGIN_NAME_NULL(10110, "请输入登录名！"),
+    PHONE_NULL(10113, "请输入手机号！"),
+    PHONE_NOT_TYPED(10112, "手机号格式错误，请重新输入！"),
     LOGIN_PASSWORD_NULL(10120, "请输入密码！"),
     LOGIN_VERIFY_CODE_NULL(10130, "请输入验证码！"),
     LOGIN_VERIFY_CODE_ERROR(10130, "验证码错误！"),
     CATEGORY_USING(10431, "分类正在被使用，无法删除！"),
+    CATEGORY_NOT_FOUND(10432, "分类不存在！"),
+    DISH_NOT_FOUND(10433, "菜品不存在！"),
+    SETMEAL_NOT_FOUND(10434, "套餐不存在！"),
 
     LOGIN_ERROR(10200, "登录失败！"),
 
