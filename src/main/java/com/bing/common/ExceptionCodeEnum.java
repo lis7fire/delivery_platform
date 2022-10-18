@@ -35,6 +35,7 @@ public enum ExceptionCodeEnum {
     CATEGORY_NOT_FOUND(10432, "分类不存在！"),
     DISH_NOT_FOUND(10433, "菜品不存在！"),
     SETMEAL_NOT_FOUND(10434, "套餐不存在！"),
+    ADDRESS_NOT_FOUND(10435, "地址不存在！"),
 
     LOGIN_ERROR(10200, "登录失败！"),
 

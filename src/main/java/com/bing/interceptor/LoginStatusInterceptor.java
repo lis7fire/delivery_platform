@@ -28,9 +28,14 @@ public class LoginStatusInterceptor implements HandlerInterceptor {
 
 //        1.获取本次请求的URI
         String path = request.getServletPath();
-        // 2.判断登录状态，session中已经登录，放行
+//        前台已登录，放行，
+        if (null != request.getSession().getAttribute(ConstArgs.USERID_SESSION)) {
+            log.info("MVC 拦截器 拦截了【前台】 path： {}； === 结果 ===:    放行", path);
+            return true;
+        }
+        // 2.判断后台登录状态，session中已经登录，放行
         if (null != request.getSession().getAttribute(ConstArgs.EMPLOYEE_ID_SESSION)) {
-            log.info("MVC 拦截器 拦截了 path： {}； === 结果 ===:    放行", path);
+            log.info("MVC 拦截器 拦截了【后台】 path： {}； === 结果 ===:    放行", path);
 
             //客户端每次发送的请求都对应一个线程。
             Long threadId = Thread.currentThread().getId();

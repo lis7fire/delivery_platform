@@ -62,7 +62,7 @@ public class UserController {
             return R.fail(ExceptionCodeEnum.LOGIN_VERIFY_CODE_ERROR);
         }
 
-        //        读取DB中是否此电话已经注册，未注册插入，已注册：将userid 写入session
+        //  前台 登录成功， 读取DB中是否此电话已经注册，未注册插入，已注册：将userid 写入session
         LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(User::getPhone, phone);
         User userInfo = userService.getOne(queryWrapper);
@@ -73,6 +73,7 @@ public class UserController {
             userService.save(userInfo);
         }
         session.setAttribute(ConstArgs.USERID_SESSION, userInfo.getId());
+        session.removeAttribute(ConstArgs.SMSCODE_SESSION);
         return R.success("登录成功");
     }
 
