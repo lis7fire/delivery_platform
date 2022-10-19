@@ -1,20 +1,26 @@
 package com.bing.controller;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bing.common.ConstArgs;
 import com.bing.common.R;
 import com.bing.entity.DTO.DishDTO;
 import com.bing.entity.DishDO;
+import com.bing.entity.DishFlavorDO;
 import com.bing.entity.VO.DishVO;
+import com.bing.service.DishFlavorService;
 import com.bing.service.DishService;
+import com.bing.util.MyBeanUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 菜品管理(DishDO)表控制层
@@ -31,6 +37,9 @@ public class DishController {
      */
     @Resource
     private DishService dishService;
+
+    @Autowired
+    private DishFlavorService dishFlavorService;
 
     /**
      * 完成-待优化分页查询所有数据
@@ -51,15 +60,32 @@ public class DishController {
     }
 
     /**
-     * 查询某种类型的 菜品列表,套餐模块使用
+     * 查询某种类型的 菜品列表,套餐模块使用，前台也使用
      *
      * @param id 主键
      * @return 单条数据
      */
     @GetMapping("/list")
-    public R<List<DishDO>> selectOne(@RequestParam("categoryId") Long categoryId) {
+    public R<List<DishDTO>> selectOne(@RequestParam("categoryId") Long categoryId) {
         log.info("需要查询的菜品种类为：{}", categoryId);
-        return R.success(this.dishService.queryBycategoryId(categoryId));
+        List<DishDO> dishs = this.dishService.queryBycategoryId(categoryId);
+
+        List<DishDTO> dishDTOList =   dishs.stream().map((item) -> {
+            DishDTO dishDto = new DishDTO();
+            MyBeanUtil.copyProperties(item, dishDto);
+            Long category = item.getCategoryId();//分类id
+            //根据id查询分类对象
+//               查询某个菜品的口味
+            Long dishId = item.getId();
+            LambdaQueryWrapper<DishFlavorDO> queryWrapper = new LambdaQueryWrapper<>();
+            queryWrapper.eq(DishFlavorDO::getDishId, dishId);
+            //SQL:select * from dish_flavor where dish_id = ?
+            List<DishFlavorDO> dishFlavorList = dishFlavorService.list(queryWrapper);
+            dishDto.setFlavors(dishFlavorList);
+            return dishDto;
+        }).collect(Collectors.toList());
+
+        return R.success(dishDTOList);
     }
 
 

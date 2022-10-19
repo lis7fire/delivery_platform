@@ -175,16 +175,30 @@ public class SetmealController {
 
     /**
      * 根据条件，获取套餐列表。应用于 前台系统
+     *
      * @param
      * @return
-     *
      * @author: LiBingYan
-     * @时间:    2022/10/12
+     * @时间: 2022/10/12
      */
     @GetMapping("/list")
-    public void list(SetmealDO setmealDO) {
+    public R<List<SetmealDO>> list(SetmealDO setmealDO) {
         LambdaQueryWrapper<SetmealDO> queryWrapper = new LambdaQueryWrapper<>();
-
-        setmealService.list(queryWrapper);
+        queryWrapper.eq(null != setmealDO.getCategoryId(), SetmealDO::getCategoryId, setmealDO.getCategoryId());
+        queryWrapper.eq(SetmealDO::getStatus, 1);
+        queryWrapper.orderByDesc(SetmealDO::getCreateTime);
+        return R.success(setmealService.list(queryWrapper));
     }
+
+    // 查询套餐下面拥有的 菜品
+    @GetMapping("/dish/{id}")
+    public R<List<SetmealDish>> list(@PathVariable("id") Long setmealId) {
+        LambdaQueryWrapper<SetmealDish> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(SetmealDish::getSetmealId, setmealId);
+        queryWrapper.eq(SetmealDish::getIsDeleted, 0);
+        queryWrapper.orderByAsc(SetmealDish::getSort);
+
+        return R.success(setmealDishService.list(queryWrapper));
+    }
+
 }
