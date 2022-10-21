@@ -1,37 +1,32 @@
 package com.bing.entity;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.Date;
-
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
- * 购物车(ShoppingCart)表实体类
+ * 订单明细表(OrderDetail)表实体类
  *
  * @author makejava
- * @since 2022-10-14 23:36:13
+ * @since 2022-10-19 16:33:57
  */
 @SuppressWarnings("serial")
-@TableName("shopping_cart")
+@TableName("Order_detail")
 @Data
-public class ShoppingCart extends Model<ShoppingCart> {
+public class OrderDetail extends Model<OrderDetail> {
     //主键
-    @TableId
     private Long id;
-    //名称
+    //名字
     private String name;
     //图片
     private String image;
-    //主键
-    @TableField("user_id")
-    private Long userId;
+    //订单id
+    @TableField("order_id")
+    private Long orderId;
     //菜品id
     @TableField("dish_id")
     private Long dishId;
@@ -45,10 +40,6 @@ public class ShoppingCart extends Model<ShoppingCart> {
     private Integer number;
     //金额
     private BigDecimal amount;
-    //创建时间
-    @TableField("create_time")
-    private LocalDateTime createTime;
-
 
     /**
      * 获取主键值

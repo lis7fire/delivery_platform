@@ -35,7 +35,7 @@ public class CommonController {
     @PostMapping(value = "/upload")
     public R<String> uploadFiles(HttpServletRequest request, HttpServletResponse response, MultipartFile file) {
 //        前端传来的 file 是临时文件，需要转存落盘，否则本次请求完成后便会被删除
-        log.info("文件上传开始。。。获取到的文件：{}", file.toString());
+//        log.info("文件上传开始。。。获取到的文件：{}", file.toString());
 //        原文件名： aaa.jpg ，suffix 为后缀格式.jpg
         String originalFilename = file.getOriginalFilename();
         String suffix = originalFilename.substring(originalFilename.lastIndexOf("."));
@@ -67,7 +67,7 @@ public class CommonController {
      */
     @GetMapping(value = "/download")
     public void previewImage(String name, HttpServletResponse response) throws IOException {
-        log.info("文件下载开始。。。");
+//        log.info("文件下载开始。。。");
 
         // 通过 server IO 读取文件，获取输入流
 //            byte[] fileBytes =   Files.readAllBytes(new File(filePath + name).toPath());
