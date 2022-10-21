@@ -9,6 +9,9 @@ import com.bing.entity.User;
 import com.bing.service.UserService;
 import com.bing.util.ValidateCodeUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -37,17 +40,18 @@ public class UserController {
     @Resource
     private UserService userService;
 
+    @Autowired
+    private CacheManager cacheManager;
 
     @PostMapping("/login")
     public R<String> frontUserLogin(HttpSession session, @RequestBody Map phoneCode) {
 //        log.info(phoneCode.toString());
         //        后期加入密码登录
         String password = (String) phoneCode.get("password");
-        phoneCode.get("phone");
-
 //        提取手机号 + 验证码 并且验证 , 转换失败则报错
         String phone = (String) phoneCode.get("phone");
         String inputCode = (String) phoneCode.get("code");
+        log.info("缓存中的code为：{};;;;;正常应该先判断是否null",String.valueOf(cacheManager.getCache("SMS").get(phone).get()));
 
 //        去掉手机号空格，验证手机号有无长度，是否纯数字手机格式
         if (null == phone) {
@@ -78,8 +82,8 @@ public class UserController {
     }
 
     @PostMapping("/sendMsg")
+    @CachePut(value = "SMS", key = "#phone.values()[0]")
     public R<String> frontSendSMS(HttpServletRequest request, @RequestBody Map phone) {
-
 //        提取手机号并且验证
 //        生成验证码
         String code = ValidateCodeUtils.generateValidateCode(4).toString();
